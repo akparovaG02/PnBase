@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password">Пароль</string>
+    <string name="login">Войти</string>
+    <string name="name">Имя</string>
+    <string name="SignUp">Зарегистрироваться</string>
+    <string name="dont_have_account">Если у вас нет учетной записи, зарегистрируйтесь</string>
+    <string name="creat_account">Создать аккаунт</string>
+    <string name="have_an_account">У вас уже есть учетная запись, войдите в систему</string>
+    <string name="login_page">Входа в систему</string>
+    <string name="no_contacts_found">Контакты не найдены и не загружаются...</string>
+    <string name="permission_to_read_contacts">Разрешение на чтение контактов не получено</string>
+    <string name="contacts">Контакты</string>
+    <string name="location_permission">Разрешение на определение местоположения не предоставлено</string>
+    <string name="start">Старт</string>
+    <string name="stop">Стоп</string>
+    <string name="send_push_notification">Отправить Push-уведомление</string>
+    <string name="title">Заглавие</string>
+    <string name="message">сообщение</string>
+    <string name="recipient_token_or_leave_empty_for_topic">Токен получателя (или оставьте пустым поле для темы)</string>
+    <string name="please_fill_all_fields">Пожалуйста, заполните все поля.</string>
+    <string name="send_notification">Отправить уведомление</string>
+    <string name="fetching">Выборка...</string>
+    <string name="your_fcm_token">Ваш токен FCM: </string>
+    <string name="media">Медия</string>
+    <string name="show_images">Изображения</string>
+    <string name="show_video">Видео</string>
+    <string name="show_audio">Аудио</string>
+    <string name="export">Экспортировать</string>
+    <string name="share_media_info">Делитесь информацией о носителях</string>
+    <string name="home">Дом</string>
+    <string name="map">Карта</string>
+    <string name="notification">Уведомление</string>
+    <string name="friends">Друзья</string>
+    <string name="russian">Русский</string>
+    <string name="engiish">Английский</string>
+    <string name="black_mode">Черный режим</string>
+    <string name="white_mode">Белый режим</string>
+</resources>

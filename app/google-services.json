@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "231238800800",
+    "project_id": "pnbase-b80ca",
+    "storage_bucket": "pnbase-b80ca.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231238800800:android:98c078cf8344a9303900c5",
+        "android_client_info": {
+          "package_name": "com.example.pnbase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9WOMumI3aJB_CN7YCMBqjfRZlrKXm_Sc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
