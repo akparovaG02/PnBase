@@ -45,4 +45,4 @@
 
 1. Клонируй проект:
 ```bash
-git clone https://github.com/akparovaG03/PnBase.git
+git clone https://github.com/akparovaG02/PnBase.git
