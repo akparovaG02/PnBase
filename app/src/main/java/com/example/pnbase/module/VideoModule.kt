@@ -34,3 +34,10 @@ val videoModule = module {
 
     viewModel { VideoViewModel(get()) }
 }
+val fileModule = module {
+    single { FilePath(androidContext().contentResolver) }
+
+    factory { GetFileUseCase(get()) }
+
+    viewModel { FileViewModel(get()) }
+}
