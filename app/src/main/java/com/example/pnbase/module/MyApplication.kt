@@ -34,7 +34,8 @@ class MyApplication : Application() {
                     mediaModule,
                     videoModule,
                     audioModule,
-                    notificationModule
+                    notificationModule,
+                    fileModule
                 )
             )
         }

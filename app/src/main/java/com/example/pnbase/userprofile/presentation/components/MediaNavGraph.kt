@@ -12,5 +12,6 @@ fun MediaNavGraph(navController: NavHostController, startDestination: String) {
         composable("showImages") { ShowImages() }
         composable("showVideo") { ShowVideo() }
         composable("showAudio") { ShowAudio() }
+        composable ("showFileByFolder") {ShowFileByFolder()}
     }
 }

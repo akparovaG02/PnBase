@@ -7,10 +7,13 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import com.example.pnbase.userprofile.AudioViewModel
+import com.example.pnbase.userprofile.FileViewModel
 import com.example.pnbase.userprofile.data.AudioFilesProvider
 import com.example.pnbase.userprofile.domain.GetAudioUseCase
 import com.example.pnbase.userprofile.ImagesViewModel
+import com.example.pnbase.userprofile.data.FilePath
 import com.example.pnbase.userprofile.data.ImageProvider
+import com.example.pnbase.userprofile.domain.GetFileUseCase
 import com.example.pnbase.userprofile.domain.GetImagesUseCase
 
 val mediaModule = module {
