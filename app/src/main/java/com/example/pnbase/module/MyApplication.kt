@@ -35,7 +35,8 @@ class MyApplication : Application() {
                     videoModule,
                     audioModule,
                     notificationModule,
-                    fileModule
+                    fileModule,
+                    SmsModule
                 )
             )
         }

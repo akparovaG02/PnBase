@@ -109,4 +109,6 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.3.1")
 
     implementation ("com.google.android.gms:play-services-location:20.0.0")
-}
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+ }

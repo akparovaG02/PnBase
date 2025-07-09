@@ -11,10 +11,13 @@ import com.example.pnbase.userprofile.FileViewModel
 import com.example.pnbase.userprofile.data.AudioFilesProvider
 import com.example.pnbase.userprofile.domain.GetAudioUseCase
 import com.example.pnbase.userprofile.ImagesViewModel
+import com.example.pnbase.userprofile.SMSViewModel
 import com.example.pnbase.userprofile.data.FilePath
 import com.example.pnbase.userprofile.data.ImageProvider
+import com.example.pnbase.userprofile.data.SmsProvider
 import com.example.pnbase.userprofile.domain.GetFileUseCase
 import com.example.pnbase.userprofile.domain.GetImagesUseCase
+import com.example.pnbase.userprofile.domain.GetSmsUseCase
 
 val mediaModule = module {
     single { ImageProvider(androidContext().contentResolver) }
@@ -43,4 +46,11 @@ val fileModule = module {
     factory { GetFileUseCase(get()) }
 
     viewModel { FileViewModel(get()) }
+}
+val SmsModule = module {
+    single { SmsProvider(androidContext().contentResolver) }
+
+    factory { GetSmsUseCase(get()) }
+
+    viewModel { SMSViewModel(get()) }
 }

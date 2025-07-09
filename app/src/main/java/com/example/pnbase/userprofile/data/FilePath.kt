@@ -2,8 +2,10 @@ package com.example.pnbase.userprofile.data
 
 import android.content.ContentResolver
 import android.provider.MediaStore
+import kotlinx.serialization.Serializable
 import java.io.File
 
+@Serializable
 data class FileData(
     val name: String,
     val mimeType: String,

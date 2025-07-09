@@ -4,7 +4,9 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.MediaStore
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Audio(
     val id: Long,
     val name: String,
