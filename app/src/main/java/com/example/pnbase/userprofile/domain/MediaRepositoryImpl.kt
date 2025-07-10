@@ -18,33 +18,53 @@ import kotlinx.serialization.Serializable
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
-
-fun exportMediaToJson(
-    context: Context
-): Uri? {
+fun exportMediaToJson(context: Context): Uri? {
 
     val images = ImageProvider(context.contentResolver).getImages()
     val videos = VideoProvider(context.contentResolver).getVideo()
     val audios = AudioFilesProvider(context.contentResolver).getAudio()
     val files = FilePath(context.contentResolver).getAllDocuments()
 
+    // папки - файлы
+    fun insertNested(map: MutableMap<String, Any>, pathParts: List<String>, value: String) {
+        var current = map
+        for (i in 0 until pathParts.lastIndex) {
+            val folder = pathParts[i]
+            if (current[folder] !is MutableMap<*, *>) {
+                current[folder] = mutableMapOf<String, Any>()
+            }
+            current = current[folder] as MutableMap<String, Any>
+        }
+        current[pathParts.last()] = value
+    }
+
     val exportImages = mutableMapOf<String, Any>()
-    images.forEach { exportImages[it.name] = it.uri.path.orEmpty() }
+    images.forEach {
+        val path = it.path
+        val parts = path.split("/").filter { it.isNotEmpty() }
+        if (parts.isNotEmpty()) insertNested(exportImages, parts, path)
+    }
 
-    val exportVideos = mutableMapOf<String, String>()
-    videos.forEach { exportVideos[it.name] = it.uri.path.orEmpty() }
+    val exportVideos = mutableMapOf<String, Any>()
+    videos.forEach {
+        val path = it.path
+        val parts = path.split("/").filter { it.isNotEmpty() }
+        if (parts.isNotEmpty()) insertNested(exportVideos, parts, path)
+    }
 
-    val exportAudios = mutableMapOf<String, String>()
-    audios.forEach { exportAudios[it.name] = it.uri.path.orEmpty() }
+    val exportAudios = mutableMapOf<String, Any>()
+    audios.forEach {
+        val path = it.path
+        val parts = path.split("/").filter { it.isNotEmpty() }
+        if (parts.isNotEmpty()) insertNested(exportAudios, parts, path)
+    }
 
-    val exportFiles = mutableMapOf<String, String>()
-    files.forEach { exportFiles[it.name] = it.path }
-    /*
-    val file = File("0")
-    file.listFiles()
-    val file1 = File("0/1")
-    file1.listFiles()
-*/
+    val exportFiles = mutableMapOf<String, Any>()
+    files.forEach {
+        val path = it.path
+        val parts = path.split("/").filter { it.isNotEmpty() }
+        if (parts.isNotEmpty()) insertNested(exportFiles, parts, path)
+    }
 
     val json = JSONObject().apply {
         put("images", JSONObject(exportImages as Map<*, *>))
@@ -53,11 +73,9 @@ fun exportMediaToJson(
         put("files", JSONObject(exportFiles as Map<*, *>))
     }
 
-
     return try {
         val file = File(context.cacheDir, "media_export_${System.currentTimeMillis()}.json")
-        file.writeText(json.toString(4))
-
+        file.writeText(json.toString(4))  //отступы
 
         FileProvider.getUriForFile(
             context,
@@ -70,3 +88,4 @@ fun exportMediaToJson(
         null
     }
 }
+

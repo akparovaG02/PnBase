@@ -28,6 +28,7 @@ import com.example.pnbase.userprofile.presentation.ContactsScreen
 import com.example.pnbase.userprofile.presentation.MapsScreen
 import com.example.pnbase.userprofile.presentation.MediaScreen
 import com.example.pnbase.userprofile.presentation.NotificationScreen
+import com.example.pnbase.userprofile.presentation.UserHomeSreen
 
 @Composable
 fun BottomBar(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel){
@@ -79,7 +80,7 @@ fun ContentScreen(
     authViewModel: AuthViewModel
 ) {
     when (selectedIndex) {
-        0 -> AdminProfile(modifier, navController, authViewModel)
+        0 -> UserHomeSreen(modifier, navController, authViewModel)
         1 -> MediaScreen(modifier)
         2 -> ContactsScreen(modifier)
         3 -> NotificationScreen(modifier)

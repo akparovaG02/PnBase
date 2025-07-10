@@ -8,10 +8,12 @@ import android.os.IBinder
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.core.app.NotificationCompat
+import com.example.pnbase.R
 import com.example.pnbase.userprofile.data.LocationClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
@@ -22,6 +24,7 @@ class LocationService: Service() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var locationClient: LocationClient
+    private var locationJob: Job? = null
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -40,7 +43,7 @@ class LocationService: Service() {
             ACTION_START -> start()
             ACTION_STOP -> stop()
         }
-        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
     private fun start() {
@@ -48,10 +51,11 @@ class LocationService: Service() {
             .setContentTitle("Tracking location...")
             .setContentText("Location: null")
             .setOngoing(true)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        locationClient
+        locationJob = locationClient
             .getLocationUpdates(10000L)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
@@ -59,7 +63,7 @@ class LocationService: Service() {
                 val long = location.longitude.toString()
                 val updatedNotification = notification.setContentText(
                     "Location: ($lat, $long)"
-                )
+                ).setSmallIcon(R.drawable.ic_launcher_foreground)
                 notificationManager.notify(1, updatedNotification.build())
             }
             .launchIn(serviceScope)
@@ -68,6 +72,7 @@ class LocationService: Service() {
     }
 
     private fun stop() {
+        locationJob?.cancel()
         stopForeground(true)
         stopSelf()
     }

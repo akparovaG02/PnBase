@@ -17,11 +17,39 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resumeWithException
+
 
 class DefaultLocationClient(
     private val context: Context,
     private val client: FusedLocationProviderClient
 ): LocationClient {
+
+    @SuppressLint("MissingPermission")
+    suspend fun getCurrentLocation(): Location {
+        if (
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            throw SecurityException("Нет разрешения на доступ к геолокации")
+        }
+
+        return suspendCancellableCoroutine { cont ->
+            client.lastLocation
+                .addOnSuccessListener { location ->
+                    if (location != null) {
+                        cont.resume(location, null)
+                    } else {
+                        cont.resumeWithException(IllegalStateException("Location is null"))
+                    }
+                }
+                .addOnFailureListener { e ->
+                    cont.resumeWithException(e)
+                }
+        }
+    }
+
 
     @SuppressLint("MissingPermission")
     override fun getLocationUpdates(interval: Long): Flow<Location> {

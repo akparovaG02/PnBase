@@ -23,12 +23,12 @@ class FilePath(private val contentResolver: ContentResolver) {
             MediaStore.Files.FileColumns._ID,
             MediaStore.Files.FileColumns.DISPLAY_NAME,
             MediaStore.Files.FileColumns.MIME_TYPE,
-            MediaStore.Files.FileColumns.DATA // устаревшее, но работает до Android 10
+            MediaStore.Files.FileColumns.DATA
         )
 
         val uri = MediaStore.Files.getContentUri("external")
         val selection = MediaStore.Files.FileColumns.MIME_TYPE + " NOT LIKE ?"
-        val selectionArgs = arrayOf("image/%") // исключаем картинки (например)
+        val selectionArgs = arrayOf("image/%")
 
         val cursor = contentResolver.query(
             uri,

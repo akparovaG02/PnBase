@@ -11,6 +11,8 @@ import com.example.pnbase.userprofile.FileViewModel
 import com.example.pnbase.userprofile.data.AudioFilesProvider
 import com.example.pnbase.userprofile.domain.GetAudioUseCase
 import com.example.pnbase.userprofile.ImagesViewModel
+import com.example.pnbase.userprofile.NotificationViewModel
+import com.example.pnbase.userprofile.PermissionViewModel
 import com.example.pnbase.userprofile.SMSViewModel
 import com.example.pnbase.userprofile.data.FilePath
 import com.example.pnbase.userprofile.data.ImageProvider
@@ -18,6 +20,7 @@ import com.example.pnbase.userprofile.data.SmsProvider
 import com.example.pnbase.userprofile.domain.GetFileUseCase
 import com.example.pnbase.userprofile.domain.GetImagesUseCase
 import com.example.pnbase.userprofile.domain.GetSmsUseCase
+import org.koin.android.ext.koin.androidApplication
 
 val mediaModule = module {
     single { ImageProvider(androidContext().contentResolver) }
@@ -53,4 +56,10 @@ val SmsModule = module {
     factory { GetSmsUseCase(get()) }
 
     viewModel { SMSViewModel(get()) }
+}
+val notification = module {
+    viewModel {NotificationViewModel()}
+}
+val notificationPremmision = module {
+    viewModel { PermissionViewModel(get()) }
 }

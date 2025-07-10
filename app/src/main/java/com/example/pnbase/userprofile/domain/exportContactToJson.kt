@@ -16,7 +16,7 @@ fun exportContactToJson(
     val sms = SmsProvider(context.contentResolver).getSms()
 
     val exportContacts = mutableMapOf<String, String>()
-    contacts.forEach { exportContacts[it.name] = it.mimeType }
+    contacts.forEach { exportContacts[it.name] = it.phoneNumber }
 
     val exportSms = mutableMapOf<String, String>()
     sms.forEach { exportSms[it.address] = it.id }
