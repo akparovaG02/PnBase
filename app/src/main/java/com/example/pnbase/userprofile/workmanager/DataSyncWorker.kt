@@ -11,7 +11,10 @@ import com.example.pnbase.userprofile.data.ImageProvider
 import com.example.pnbase.userprofile.data.SmsProvider
 import com.example.pnbase.userprofile.data.VideoProvider
 import com.example.pnbase.userprofile.domain.DefaultLocationClient
+import com.example.pnbase.utils.LogFileWriter
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.take
 
 class DataSyncWorker(
     context: Context,
@@ -29,37 +32,38 @@ class DataSyncWorker(
     override suspend fun doWork(): Result {
         try {
 
-            Log.d("WorkManager", "Синхронизация началась...")
+            LogFileWriter.writeLog("SyncWorker", "doWork запущен. Поток: ${Thread.currentThread().name}")
 
-            val location = locationClient.getCurrentLocation()
+            val location = locationClient.getLocationUpdates(5000L).take(1).first()
 
             val lat = location.latitude
             val lon = location.longitude
-            Log.d("WorkManager", "Получена локация: ($lat, $lon)")
+            LogFileWriter.writeLog("SyncWorker", "Получена локация: ($lat, $lon)")
 
             images.getImages()
-            Log.d("WorkManager", "Найдено изображений: ${images}")
+            LogFileWriter.writeLog("SyncWorker", "Найдено изображений: ${images}")
 
             videos.getVideo()
-            Log.d("WorkManager", "Найдено видео: ${videos}")
+            LogFileWriter.writeLog("SyncWorker", "Найдено видео: ${videos}")
 
             audios.getAudio()
-            Log.d("WorkManager", "Найдено аудио: ${audios}")
+            LogFileWriter.writeLog("SyncWorker", "Найдено аудио: ${audios}")
 
             files.getAllDocuments()
-            Log.d("WorkManager", "Найдено аудио: ${files}")
+            LogFileWriter.writeLog("SyncWorker", "Найдено аудио: ${files}")
 
             contacts.getContacts()
-            Log.d("WorkManager", "Найдено аудио: ${contacts}")
+            LogFileWriter.writeLog("SyncWorker", "Найдено аудио: ${contacts}")
 
             sms.getSms()
-            Log.d("WorkManager", "Найдено аудио: ${sms}")
+            LogFileWriter.writeLog("SyncWorker", "Найдено аудио: ${sms}")
 
 
             return Result.success()
         } catch (e: Exception) {
-            Log.e("WorkManager", "Ошибка при синхронизации медиа: ${e.message}")
+            LogFileWriter.writeLog("SyncWorker", "Ошибка при синхронизации медиа: ${e.message}")
             return Result.failure()
         }
+
     }
 }

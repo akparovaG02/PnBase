@@ -14,18 +14,26 @@ import com.example.pnbase.userprofile.data.Image
 import com.example.pnbase.userprofile.data.ImageProvider
 import com.example.pnbase.userprofile.data.Video
 import com.example.pnbase.userprofile.data.VideoProvider
+import com.example.pnbase.utils.LogFileWriter
 import kotlinx.serialization.Serializable
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+
 fun exportMediaToJson(context: Context): Uri? {
+
+    LogFileWriter.writeLog("APPLOG", "Начат экспорт медиафайлов")
 
     val images = ImageProvider(context.contentResolver).getImages()
     val videos = VideoProvider(context.contentResolver).getVideo()
     val audios = AudioFilesProvider(context.contentResolver).getAudio()
     val files = FilePath(context.contentResolver).getAllDocuments()
 
-    // папки - файлы
+    LogFileWriter.writeLog("APPLOG", "Найдено изображений: ${images.size}")
+    LogFileWriter.writeLog("APPLOG", "Найдено видео: ${videos.size}")
+    LogFileWriter.writeLog("APPLOG", "Найдено аудио: ${audios.size}")
+    LogFileWriter.writeLog("APPLOG", "Найдено файлов: ${files.size}")
+
     fun insertNested(map: MutableMap<String, Any>, pathParts: List<String>, value: String) {
         var current = map
         for (i in 0 until pathParts.lastIndex) {
@@ -75,17 +83,17 @@ fun exportMediaToJson(context: Context): Uri? {
 
     return try {
         val file = File(context.cacheDir, "media_export_${System.currentTimeMillis()}.json")
-        file.writeText(json.toString(4))  //отступы
+        file.writeText(json.toString(4))  // отступы
+
+        LogFileWriter.writeLog("APPLOG", "Экспорт завершён успешно: ${file.absolutePath}")
 
         FileProvider.getUriForFile(
             context,
             "${context.packageName}.fileprovider",
             file
         )
-
     } catch (e: IOException) {
-        e.printStackTrace()
+        LogFileWriter.writeLog("APPLOG", "Ошибка при экспорте медиа: ${e.message}")
         null
     }
 }
-
