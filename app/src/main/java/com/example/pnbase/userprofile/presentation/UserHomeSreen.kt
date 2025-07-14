@@ -66,7 +66,7 @@ fun MainScreen() {
         Button(
             onClick = {
                 val request = PeriodicWorkRequestBuilder<DataSyncWorker>(
-                    60, TimeUnit.SECONDS
+                    2, TimeUnit.DAYS
                 ).build()
 
                 WorkManager.getInstance(context).enqueueUniquePeriodicWork(

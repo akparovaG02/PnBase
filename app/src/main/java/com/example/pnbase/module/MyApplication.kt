@@ -60,7 +60,7 @@ class MyApplication : Application() {
         }
 
         val dataRequest = PeriodicWorkRequestBuilder<DataSyncWorker>(
-            60, TimeUnit.DAYS
+            2, TimeUnit.DAYS
         ).build()
         // надо потом поменять время!!!
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
@@ -84,7 +84,7 @@ fun scheduleAlarm(context: Context) {
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
-    val intervalMillis = 60 * 60 * 1000L
+    val intervalMillis = AlarmManager.INTERVAL_DAY
 
     alarmManager.setExactAndAllowWhileIdle(
         AlarmManager.RTC_WAKEUP,
@@ -92,5 +92,5 @@ fun scheduleAlarm(context: Context) {
         pendingIntent
     )
 
-    LogFileWriter.writeLog("SyncWorker", "AlarmManager запланирован через 60 секунд")
+    LogFileWriter.writeLog("SyncWorker", "AlarmManager запланирован через на каждый день")
 }
