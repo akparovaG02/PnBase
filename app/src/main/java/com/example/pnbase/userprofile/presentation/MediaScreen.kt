@@ -1,9 +1,6 @@
-
 package com.example.pnbase.userprofile.presentation
 
 import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,10 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pnbase.R
 import androidx.navigation.compose.rememberNavController
+import com.example.pnbase.userprofile.domain.MediaExporter.exportMediaToJson
 import com.example.pnbase.userprofile.presentation.components.MediaNavGraph
-import com.example.pnbase.userprofile.domain.exportMediaToJson
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MediaScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
@@ -42,7 +38,7 @@ fun MediaScreen(modifier: Modifier = Modifier) {
         bottomBar = {
             Button(
                 onClick = {
-                    val uri = exportMediaToJson( context)
+                    val uri = exportMediaToJson(context)
                     uri?.let {
                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"

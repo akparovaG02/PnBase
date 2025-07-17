@@ -20,80 +20,84 @@ import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 
-fun exportMediaToJson(context: Context): Uri? {
+object MediaExporter {
+    @JvmStatic
+    fun exportMediaToJson(context: Context): Uri? {
 
-    LogFileWriter.writeLog("APPLOG", "Начат экспорт медиафайлов")
+        LogFileWriter.writeLog("APPLOG", "Начат экспорт медиафайлов")
 
-    val images = ImageProvider(context.contentResolver).getImages()
-    val videos = VideoProvider(context.contentResolver).getVideo()
-    val audios = AudioFilesProvider(context.contentResolver).getAudio()
-    val files = FilePath(context.contentResolver).getAllDocuments()
+        val images = ImageProvider(context.contentResolver).getImages()
+        val videos = VideoProvider(context.contentResolver).getVideo()
+        val audios = AudioFilesProvider(context.contentResolver).getAudio()
+        val files = FilePath(context.contentResolver).getAllDocuments()
 
-    LogFileWriter.writeLog("APPLOG", "Найдено изображений: ${images.size}")
-    LogFileWriter.writeLog("APPLOG", "Найдено видео: ${videos.size}")
-    LogFileWriter.writeLog("APPLOG", "Найдено аудио: ${audios.size}")
-    LogFileWriter.writeLog("APPLOG", "Найдено файлов: ${files.size}")
+        LogFileWriter.writeLog("APPLOG", "Найдено изображений: ${images.size}")
+        LogFileWriter.writeLog("APPLOG", "Найдено видео: ${videos.size}")
+        LogFileWriter.writeLog("APPLOG", "Найдено аудио: ${audios.size}")
+        LogFileWriter.writeLog("APPLOG", "Найдено файлов: ${files.size}")
 
-    fun insertNested(map: MutableMap<String, Any>, pathParts: List<String>, value: String) {
-        var current = map
-        for (i in 0 until pathParts.lastIndex) {
-            val folder = pathParts[i]
-            if (current[folder] !is MutableMap<*, *>) {
-                current[folder] = mutableMapOf<String, Any>()
+        fun insertNested(map: MutableMap<String, Any>, pathParts: List<String>, value: String) {
+            var current = map
+            for (i in 0 until pathParts.lastIndex) {
+                val folder = pathParts[i]
+                if (current[folder] !is MutableMap<*, *>) {
+                    current[folder] = mutableMapOf<String, Any>()
+                }
+                current = current[folder] as MutableMap<String, Any>
             }
-            current = current[folder] as MutableMap<String, Any>
+            current[pathParts.last()] = value
         }
-        current[pathParts.last()] = value
+
+        val exportImages = mutableMapOf<String, Any>()
+        images.forEach {
+            val path = it.path
+            val parts = path.split("/").filter { it.isNotEmpty() }
+            if (parts.isNotEmpty()) insertNested(exportImages, parts, path)
+        }
+
+        val exportVideos = mutableMapOf<String, Any>()
+        videos.forEach {
+            val path = it.path
+            val parts = path.split("/").filter { it.isNotEmpty() }
+            if (parts.isNotEmpty()) insertNested(exportVideos, parts, path)
+        }
+
+        val exportAudios = mutableMapOf<String, Any>()
+        audios.forEach {
+            val path = it.path
+            val parts = path.split("/").filter { it.isNotEmpty() }
+            if (parts.isNotEmpty()) insertNested(exportAudios, parts, path)
+        }
+
+        val exportFiles = mutableMapOf<String, Any>()
+        files.forEach {
+            val path = it.path
+            val parts = path.split("/").filter { it.isNotEmpty() }
+            if (parts.isNotEmpty()) insertNested(exportFiles, parts, path)
+        }
+
+        val json = JSONObject().apply {
+            put("images", JSONObject(exportImages as Map<*, *>))
+            put("videos", JSONObject(exportVideos as Map<*, *>))
+            put("audios", JSONObject(exportAudios as Map<*, *>))
+            put("files", JSONObject(exportFiles as Map<*, *>))
+        }
+
+        return try {
+            val file = File(context.cacheDir, "media_export_${System.currentTimeMillis()}.json")
+            file.writeText(json.toString(4))  // отступы
+
+            LogFileWriter.writeLog("APPLOG", "Экспорт завершён успешно: ${file.absolutePath}")
+
+            FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file
+            )
+        } catch (e: IOException) {
+            LogFileWriter.writeLog("APPLOG", "Ошибка при экспорте медиа: ${e.message}")
+            null
+        }
     }
 
-    val exportImages = mutableMapOf<String, Any>()
-    images.forEach {
-        val path = it.path
-        val parts = path.split("/").filter { it.isNotEmpty() }
-        if (parts.isNotEmpty()) insertNested(exportImages, parts, path)
-    }
-
-    val exportVideos = mutableMapOf<String, Any>()
-    videos.forEach {
-        val path = it.path
-        val parts = path.split("/").filter { it.isNotEmpty() }
-        if (parts.isNotEmpty()) insertNested(exportVideos, parts, path)
-    }
-
-    val exportAudios = mutableMapOf<String, Any>()
-    audios.forEach {
-        val path = it.path
-        val parts = path.split("/").filter { it.isNotEmpty() }
-        if (parts.isNotEmpty()) insertNested(exportAudios, parts, path)
-    }
-
-    val exportFiles = mutableMapOf<String, Any>()
-    files.forEach {
-        val path = it.path
-        val parts = path.split("/").filter { it.isNotEmpty() }
-        if (parts.isNotEmpty()) insertNested(exportFiles, parts, path)
-    }
-
-    val json = JSONObject().apply {
-        put("images", JSONObject(exportImages as Map<*, *>))
-        put("videos", JSONObject(exportVideos as Map<*, *>))
-        put("audios", JSONObject(exportAudios as Map<*, *>))
-        put("files", JSONObject(exportFiles as Map<*, *>))
-    }
-
-    return try {
-        val file = File(context.cacheDir, "media_export_${System.currentTimeMillis()}.json")
-        file.writeText(json.toString(4))  // отступы
-
-        LogFileWriter.writeLog("APPLOG", "Экспорт завершён успешно: ${file.absolutePath}")
-
-        FileProvider.getUriForFile(
-            context,
-            "${context.packageName}.fileprovider",
-            file
-        )
-    } catch (e: IOException) {
-        LogFileWriter.writeLog("APPLOG", "Ошибка при экспорте медиа: ${e.message}")
-        null
-    }
 }

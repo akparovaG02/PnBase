@@ -1,5 +1,6 @@
 package com.example.pnbase.module
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.Application
 import org.koin.android.ext.koin.androidContext
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeUnit
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        scheduleAlarm(this)
+       // scheduleAlarm(this)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -73,6 +74,7 @@ class MyApplication : Application() {
 
 
 }
+@SuppressLint("ScheduleExactAlarm")
 fun scheduleAlarm(context: Context) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -84,13 +86,14 @@ fun scheduleAlarm(context: Context) {
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
-    val intervalMillis = AlarmManager.INTERVAL_DAY
+    val intervalMillis = 60 * 60 * 1000L
 
     alarmManager.setExactAndAllowWhileIdle(
         AlarmManager.RTC_WAKEUP,
         intervalMillis,
         pendingIntent
     )
+
 
     LogFileWriter.writeLog("SyncWorker", "AlarmManager запланирован через на каждый день")
 }

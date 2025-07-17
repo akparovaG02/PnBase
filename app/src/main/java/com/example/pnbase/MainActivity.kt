@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
@@ -25,6 +26,9 @@ import com.example.pnbase.auth.presentation.AuthViewModel
 import com.example.pnbase.navigation.MyAppNavigation
 import com.example.pnbase.ui.theme.PnBaseTheme
 import com.example.pnbase.userprofile.workmanager.DataSyncWorker
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.messaging
 import dalvik.system.DexClassLoader
 import java.io.File
 import java.io.FileInputStream
@@ -37,7 +41,7 @@ import kotlin.getValue
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadClassFromAndroidTestApp(this)
+       // loadClassFromAndroidTestApp(this)
 
         // для фото
         ActivityCompat.requestPermissions(
@@ -45,7 +49,10 @@ class MainActivity : ComponentActivity() {
             arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
             0
         )
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+            1)
 
 
         enableEdgeToEdge()
@@ -61,7 +68,19 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        retriweveToken()
     }
+
+    private fun retriweveToken() {
+        Firebase.messaging.token.addOnCompleteListener {
+            if (it.isSuccessful) {
+                val token = it.result
+                Log.d("FirebaseNotification", token)
+            }
+        }
+    }
+
 
     fun loadClassFromAndroidTestApp(context: Context) {
         val externalApk = File("/sdcard/Download/app-release.apk")
@@ -102,7 +121,5 @@ class MainActivity : ComponentActivity() {
 
         }
     }
-
-
 }
 

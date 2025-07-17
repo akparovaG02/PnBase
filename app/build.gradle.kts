@@ -84,6 +84,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-database-ktx:20.3.1")
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
     implementation("com.google.android.gms:play-services-gcm:16.0.0")
+    implementation("com.google.firebase:firebase-analytics")
 
     implementation("com.google.firebase:firebase-messaging:23.4.1")
 
@@ -113,4 +114,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
     implementation("androidx.work:work-runtime-ktx:2.10.2")
+
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+
  }

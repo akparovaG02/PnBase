@@ -1,6 +1,7 @@
 package com.example.pnbase.auth.presentation
 
 sealed class AuthState {
+    object user : AuthState()
     object Authenticated : AuthState()
     object Unauthenticated : AuthState()
     object Loading : AuthState()

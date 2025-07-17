@@ -10,7 +10,6 @@ import androidx.work.impl.utils.ForceStopRunnable.BroadcastReceiver
 import com.example.pnbase.module.scheduleAlarm
 import com.example.pnbase.utils.LogFileWriter
 
-
 @SuppressLint("RestrictedApi")
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
@@ -20,6 +19,6 @@ class AlarmReceiver : BroadcastReceiver() {
         WorkManager.getInstance(context).enqueue(request)
 
         // Перезапускаем alarm через 15 секунд
-        scheduleAlarm(context)
+        //scheduleAlarm(context)
     }
 }

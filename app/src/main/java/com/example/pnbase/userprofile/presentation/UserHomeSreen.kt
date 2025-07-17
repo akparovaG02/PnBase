@@ -27,14 +27,11 @@ import com.example.pnbase.userprofile.workmanager.DataSyncWorker
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun UserHomeSreen(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel){
     MainScreen()
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen() {
     val context = LocalContext.current
@@ -60,7 +57,7 @@ fun MainScreen() {
         ) {
             Text("Получить список всех приложении")
         }
-
+/*
         Spacer(modifier = Modifier.height(8.dp))
         // надо потом поменять время
         Button(
@@ -79,6 +76,7 @@ fun MainScreen() {
         ) {
             Text("Синхронизировать медиа и локацию")
         }
+        */
 
         Spacer(modifier = Modifier.height(8.dp))
 

@@ -35,15 +35,9 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     authViewModel: AuthViewModel
-){
-    var email by remember {
-        mutableStateOf("")
-    }
-
-    var password by remember {
-        mutableStateOf("")
-    }
-
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
 
     val authState = authViewModel.authState.observeAsState()
@@ -64,35 +58,28 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = stringResource(R.string.login_page), fontSize = 32.sp)
-
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = email,
-            onValueChange = {
-                email = it
-            },
-            label = {
-                Text(text = stringResource(R.string.email))
-            }
+            onValueChange = { email = it },
+            label = { Text(text = stringResource(R.string.email)) }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = password,
-            onValueChange = {
-                password = it
-            },
-            label = {
-                Text(text = stringResource(R.string.password))
-            }
+            onValueChange = { password = it },
+            label = { Text(text = stringResource(R.string.password)) }
         )
+
         Spacer(modifier = Modifier.height(10.dp))
 
-        Button(onClick = {
-            authViewModel.login(email,password, name)
-        },
+        Button(
+            onClick = {
+                authViewModel.login(email, password, name)
+            },
             enabled = authState.value != AuthState.Loading
         ) {
             Text(text = stringResource(R.string.login))

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.example.pnbase.utils.LogFileWriter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -84,15 +85,13 @@ class AuthViewModel : ViewModel() {
         _authState.value = AuthState.Unauthenticated
     }
 
-    private fun getOrCreateUserInDatabase(user: FirebaseUser, name: String) {
+    fun getOrCreateUserInDatabase(user: FirebaseUser, name: String ) {
+
         val dbRef = FirebaseDatabase.getInstance().getReference("users")
         val userRef = dbRef.child(user.uid)
 
-        LogFileWriter.writeLog("APPLOG", "Проверка существования пользователя в базе данных: ${user.uid}")
-
         dbRef.get().addOnSuccessListener { snapshot ->
             val isEmpty = !snapshot.exists()
-            LogFileWriter.writeLog("APPLOG", "База данных ${if (isEmpty) "пустая (создаётся админ)" else "не пустая"}")
 
             userRef.get().addOnSuccessListener { userSnapshot ->
                 if (!userSnapshot.exists()) {
@@ -101,19 +100,39 @@ class AuthViewModel : ViewModel() {
                         "email" to user.email,
                         "role" to if (isEmpty) "admin" else "user"
                     )
-                    userRef.setValue(userData)
-                        .addOnSuccessListener {
-                            LogFileWriter.writeLog("APPLOG", "Пользователь успешно добавлен в базу: $userData")
-                        }
-                        .addOnFailureListener {
-                            LogFileWriter.writeLog("APPLOG", "Ошибка при добавлении пользователя в базу: ${it.message}")
-                        }
+                    userRef.setValue(userData).addOnSuccessListener {
+                     //   onComplete()
+                    }.addOnFailureListener {
+                    }
                 } else {
-                    LogFileWriter.writeLog("APPLOG", "Пользователь уже существует в базе данных")
+                 //   onComplete()
                 }
             }
         }.addOnFailureListener {
-            LogFileWriter.writeLog("APPLOG", "Ошибка при доступе к базе данных: ${it.message}")
+            // Обработка ошибки
         }
     }
+
+
+    private val database = FirebaseDatabase.getInstance().reference
+
+    fun checkUserRoleAndNavigate(uid: String, navController: NavController) {
+        database.child("users").child(uid).child("role").get()
+            .addOnSuccessListener { snapshot ->
+                val role = snapshot.value as? String
+                if (role == "admin") {
+                    navController.navigate("adminHome") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                } else {
+                    navController.navigate("userHome") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            }
+            .addOnFailureListener {
+                Log.e("AuthViewModel", "Ошибка при получении роли: ${it.message}")
+            }
+    }
+
 }

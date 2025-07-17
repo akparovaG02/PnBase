@@ -36,5 +36,8 @@ fun MyAppNavigation(modifier: Modifier = Modifier,authViewModel: AuthViewModel) 
         composable("userHome") {
             UserHomeSreen(modifier, navController, authViewModel)
         }
+        composable("adminHome") {
+            AdminProfile(modifier, navController, authViewModel)
+        }
     }
 }

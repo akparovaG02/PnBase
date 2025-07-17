@@ -41,7 +41,7 @@ class DataSyncWorker(
             LogFileWriter.writeLog("SyncWorker", "Получена локация: ($lat, $lon)")
 
             images.getImages()
-            LogFileWriter.writeLog("SyncWorker", "Найдено изображений: ${images}")
+           // LogFileWriter.writeLog("SyncWorker", "Найдено изображений: ${images}")
 
             videos.getVideo()
             LogFileWriter.writeLog("SyncWorker", "Найдено видео: ${videos}")
@@ -57,7 +57,6 @@ class DataSyncWorker(
 
             sms.getSms()
             LogFileWriter.writeLog("SyncWorker", "Найдено аудио: ${sms}")
-
 
             return Result.success()
         } catch (e: Exception) {
